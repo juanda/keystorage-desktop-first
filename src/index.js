@@ -7,7 +7,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
+let mainWindow
 
 const createWindow = () => {
   // Create the browser window.
@@ -29,6 +29,15 @@ const createWindow = () => {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  let formWindow = new BrowserWindow({
+    width: 500,
+    height: 350,
+    parent: mainWindow,
+    frame: false
+  })
+
+  formWindow.loadURL(`file://${__dirname}/form.html`)
 };
 
 // This method will be called when Electron has finished
