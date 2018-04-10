@@ -42,3 +42,5 @@ class KeyStorage {
       return delete this.data_object[name]
   }
 }
+
+module.exports.KeyStorage

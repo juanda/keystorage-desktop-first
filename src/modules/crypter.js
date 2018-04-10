@@ -22,3 +22,5 @@ class Crypter {
         return decrypted
     }
 }
+
+module.exports.Crypter
