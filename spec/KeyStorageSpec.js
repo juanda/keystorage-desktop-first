@@ -1,4 +1,4 @@
-const { KeyStorage } = require("../src/modules/KeyStorage.js");
+const { KeyStorage } = require("../src/modules/KeyStorage");
 const fs = require('fs')
 
 let mockCrypter = {

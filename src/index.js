@@ -1,7 +1,12 @@
 const { app, BrowserWindow, Menu } = require("electron")
+const EventEmitter = require('events')
+
+const menuEmitter = new EventEmitter()
+
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+let mainWindow, formWindow
 
 const createWindow = () => {
   // Create the browser window.
@@ -14,7 +19,7 @@ const createWindow = () => {
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -24,9 +29,11 @@ const createWindow = () => {
     mainWindow = null;
   });
 
-  Menu.setApplicationMenu(Menu.buildFromTemplate(require('./menu.js').templateMenu))
+  let mainMenu = require('./menu.js').mainMenu
+  let templateMenu = mainMenu(menuEmitter)
+  Menu.setApplicationMenu(Menu.buildFromTemplate(templateMenu))
 
-  let formWindow = new BrowserWindow({
+  formWindow = new BrowserWindow({
     width: 500,
     height: 350,
     parent: mainWindow,
@@ -61,3 +68,23 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+menuEmitter.on('create-keystorage', (e) => {
+  console.log('crear keystorage')
+})
+
+menuEmitter.on('load-keystorage', (e) => {
+  console.log('cargar keystorage')
+})
+
+menuEmitter.on('add-keyregister', (e) => {
+  console.log('añadir keyregister')
+})
+
+menuEmitter.on('edit-keyregister', (e) => {
+  console.log('editar keyregister')
+})
+
+menuEmitter.on('delete-keyregister', (e) => {
+  console.log('borrar keyregister')
+})

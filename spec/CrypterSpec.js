@@ -1,5 +1,5 @@
 describe("Crypter", () => {
-  const { Crypter } = require("../src/modules/Crypter.js");
+  const { Crypter } = require("../src/modules/Crypter");
   let crypter
   
   beforeEach(() => {
