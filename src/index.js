@@ -1,9 +1,4 @@
-import { app, BrowserWindow } from 'electron';
-
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
-  app.quit();
-}
+const { app, BrowserWindow, Menu } = require("electron")
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -30,11 +25,14 @@ const createWindow = () => {
     mainWindow = null;
   });
 
+  Menu.setApplicationMenu(Menu.buildFromTemplate(require('./menu.js').templateMenu))
+
   let formWindow = new BrowserWindow({
     width: 500,
     height: 350,
     parent: mainWindow,
-    frame: false
+    frame: false,
+    show: false
   })
 
   formWindow.loadURL(`file://${__dirname}/form.html`)
