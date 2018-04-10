@@ -1,16 +1,21 @@
 describe("Crypter", () => {
-  const { Crypter } = require("../src/modules/Crypter");
+  const { Crypter } = require("../src/modules/Crypter.js");
   let crypter
   
-  beforeEach(function() {
-    crypter = new Crypter("laclave");
+  beforeEach(() => {
+    crypter = new Crypter();
+    crypter.setKey("laclave")
   });
 
-  it("Debería encriptar", function() {
-    cryp;
-    expect(player.currentlyPlayingSong).toEqual(song);
+  it("Debería encriptar", () => {
+    let encrypted = crypter.encrypt("hola caracola");
+    expect(encrypted).not.toBeNull();
+    expect(encrypted).toBe('9bb0140dd71cf98f8d5590c6bb6736d5')
+  })
 
-    //demonstrates use of custom matcher
-    expect(player).toBePlaying(song);
-  });
+  it("Debería desencriptar", () => {
+    let decrypter = crypter.decrypt("9bb0140dd71cf98f8d5590c6bb6736d5")
+    expect(decrypter).not.toBeNull()
+    expect(decrypter).toBe("hola caracola")
+  })
 });

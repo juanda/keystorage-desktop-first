@@ -8,18 +8,18 @@ class KeyStorage {
   }
 
   openDataFile(key) {
-    this.crypter.setKey($key);
+    this.crypter.setKey(key);
 
     // Si el fichero no existe lo creamos
     if (!fs.existsSync(this.key_filepath)) {
       fs.writeFileSync(this.key_filepath, this.crypter.encrypt("{}"));
     }
 
-    let data;
-    fs.readFileSync(this.key_filepath, data, "utf8");
+    let data = fs.readFileSync(this.key_filepath, "utf8");
     let decoded_data = this.crypter.decrypt(data);
 
     // Lanza una excepción si falla
+    
     this.data_object = JSON.parse(decoded_data);
   }
 
@@ -38,9 +38,13 @@ class KeyStorage {
       return this.data_object[name]
   }
 
+  getAll(){
+    return this.data_object
+  }
+
   delete(name){
       return delete this.data_object[name]
   }
 }
 
-module.exports.KeyStorage
+module.exports.KeyStorage = KeyStorage
