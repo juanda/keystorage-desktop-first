@@ -24,6 +24,7 @@ class KeyStorage {
   }
 
   add(key_register) {
+   
     Object.assign(this.data_object, key_register);
   }
 

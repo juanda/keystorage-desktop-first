@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu } = require("electron")
+const { app, BrowserWindow, Menu, ipcMain } = require("electron")
 const EventEmitter = require('events')
 
 const menuEmitter = new EventEmitter()
@@ -16,7 +16,7 @@ const createWindow = () => {
   });
 
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.loadURL(`file://${__dirname}/templates/index.html`);
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
@@ -32,16 +32,7 @@ const createWindow = () => {
   let mainMenu = require('./menu.js').mainMenu
   let templateMenu = mainMenu(menuEmitter)
   Menu.setApplicationMenu(Menu.buildFromTemplate(templateMenu))
-
-  formWindow = new BrowserWindow({
-    width: 500,
-    height: 350,
-    parent: mainWindow,
-    frame: false,
-    show: false
-  })
-
-  formWindow.loadURL(`file://${__dirname}/form.html`)
+  
 };
 
 // This method will be called when Electron has finished
@@ -68,17 +59,30 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+const { KeyStorageFileManager } = require('./modules/KeyStorageFileManager')
 
 menuEmitter.on('create-keystorage', (e) => {
   console.log('crear keystorage')
+  // data es un objeto del tipo {file: '/ruta/al/keystorage', key: 'laclave'}
+  KeyStorageFileManager.createKeyStorageFile(mainWindow)  
 })
 
 menuEmitter.on('load-keystorage', (e) => {
-  console.log('cargar keystorage')
+  KeyStorageFileManager.loadKeyStorageFile(mainWindow) 
+})
+
+ipcMain.on('load-keystorage', (e, args) => {
+  mainWindow.webContents.send('load-keystorage', args)
 })
 
 menuEmitter.on('add-keyregister', (e) => {
   console.log('añadir keyregister')
+  KeyStorageFileManager.addKeyRegister(mainWindow)
+})
+
+ipcMain.on('add-keyregister', (e, register) => {
+  console.log(register)
+  mainWindow.webContents.send('add-keyregister', register)
 })
 
 menuEmitter.on('edit-keyregister', (e) => {

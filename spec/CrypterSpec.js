@@ -18,4 +18,14 @@ describe("Crypter", () => {
     expect(decrypter).not.toBeNull()
     expect(decrypter).toBe("hola caracola")
   })
+
+  it("Debería encriptar dos veces", () => {
+    let encrypted = crypter.encrypt("hola caracola");
+    expect(encrypted).not.toBeNull();
+    expect(encrypted).toBe('9bb0140dd71cf98f8d5590c6bb6736d5')
+
+    let encrypted2 = crypter.encrypt("hola caracola");
+    expect(encrypted2).not.toBeNull();
+    expect(encrypted2).toBe('9bb0140dd71cf98f8d5590c6bb6736d5')
+  })
 });
