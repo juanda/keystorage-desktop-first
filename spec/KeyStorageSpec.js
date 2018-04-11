@@ -69,7 +69,6 @@ describe("KeyStorage 2", () => {
                 nombre: "el nombre",
                 apellidos: "los apellidos"
             }
-
         }
         let keyregister2 = {
             clave2: {

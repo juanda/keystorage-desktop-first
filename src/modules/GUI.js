@@ -1,5 +1,5 @@
 class GUI {
-  constructor(document, keystorage) {
+  constructor(document) {
     this.document = document;
     this.app_title = this.document.getElementById("app_title");
     this.form = this.document.getElementById("form");
@@ -14,7 +14,7 @@ class GUI {
 
     this.current_key = null
 
-    this.keystorage = keystorage
+    this.keystorage = null
   }
 
   init() {
@@ -26,15 +26,29 @@ class GUI {
     this.putFormInReadOnlyMode();
   }
 
-  getCurrentKey(){
+  setKeyStorage(keystorage) {
+    this.keystorage = keystorage
+  }
+
+  getCurrentKey() {
     return this.current_key
   }
 
-  addEventsListeners(){
+  editRegister() {
+    this.putFormInWriteMode();
+    this.title.focus()
+  }
+
+  deleteRegister(){
+    this.keystorage.delete(this.current_key)
+    this.keystorage.save()
+    this.updateRegisterList(this.keystorage.getAll())
+  }
+
+  addEventsListeners() {
     this.btn_edit.addEventListener('click', (e) => {
       e.preventDefault()
-      this.putFormInWriteMode();
-      this.title.focus()
+      this.editRegister()
     })
 
     this.btn_cancel.addEventListener('click', (e) => {
@@ -47,14 +61,16 @@ class GUI {
       let register = {}
       register[this.current_key] = {
         title: this.title.value,
+        username: this.username.value,
         password: this.password.value,
         url: this.url.value,
         note: this.title.value
       }
       this.keystorage.add(register)
       this.keystorage.save()
-      this.updateRegisterList(keystorage.getAll())
-      console.log(e) 
+      this.updateRegisterList(this.keystorage.getAll())
+      this.putFormInReadOnlyMode()
+      console.log(e)
     })
   }
 
@@ -76,7 +92,7 @@ class GUI {
    *   </li>
    */
   updateRegisterList(registers) {
-    let reg_list = this.document.getElementById("register-list");    
+    let reg_list = this.document.getElementById("register-list");
     while (reg_list.firstChild) {
       reg_list.removeChild(reg_list.firstChild);
     }
@@ -84,7 +100,7 @@ class GUI {
     let i = 0;
     for (let key in registers) {
       let reg_element = this.document.createElement("li");
-      reg_element.className = `list-group-item ${(i == 0)? 'active': ''}`;
+      reg_element.className = `list-group-item ${(i == 0) ? 'active' : ''}`;
       reg_element.id = key;
       reg_element.innerHTML = `<div class="media-body">
             <strong>${registers[key].title}<strong>
@@ -99,11 +115,11 @@ class GUI {
         reg_element.className += ' active'
         this.updateForm(registers[key])
         this.current_key = key
-      })      
+      })
       i++
     }
-    
-    if(i > 0){
+
+    if (i > 0) {
       let first_key = Object.keys(registers)[0]
       this.form.style.display = "inline";
       this.updateForm(registers[first_key]);
@@ -130,7 +146,7 @@ class GUI {
    *
    * @param {*} key_pattern
    */
-  filterRegisterForm(key_pattern) {}
+  filterRegisterForm(key_pattern) { }
 
   putFormInReadOnlyMode() {
     this.title.readOnly = true

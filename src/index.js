@@ -86,9 +86,10 @@ ipcMain.on('add-keyregister', (e, register) => {
 })
 
 menuEmitter.on('edit-keyregister', (e) => {
-  console.log('editar keyregister')
+  mainWindow.webContents.send('edit-keyregister')
 })
 
 menuEmitter.on('delete-keyregister', (e) => {
   console.log('borrar keyregister')
+  mainWindow.webContents.send('delete-keyregister')
 })

@@ -17,6 +17,7 @@ ipcRenderer.on('load-keystorage', (e, args) => {
     keyStorage = new KeyStorage(crypter, file)
     keyStorage.openDataFile(key)
 
+    gui.setKeyStorage(keyStorage)
     gui.updateRegisterList(keyStorage.getAll())
     gui.setAppTitle(`Almacén de claves ACME (${path.parse(file).base})`)
     
@@ -29,10 +30,10 @@ ipcRenderer.on('add-keyregister', (e, register) => {
     gui.updateRegisterList(keyStorage.getAll())
 })
 
-ipcRenderer.on('delete-keyregister', (e, args) => {
-    
+ipcRenderer.on('edit-keyregister', (e) => {
+    gui.editRegister()
 })
 
-ipcRenderer.on('reload-list', (e, args) => {
-
+ipcRenderer.on('delete-keyregister', (e) => {
+    gui.deleteRegister()
 })
