@@ -8,7 +8,6 @@ let crypter, keyStorage
 let gui = new GUI(document)
 gui.init()
 
-
 ipcRenderer.on('load-keystorage', (e, args) => {
     let file = args.file
     let key = args.key
@@ -24,7 +23,6 @@ ipcRenderer.on('load-keystorage', (e, args) => {
 })
 
 ipcRenderer.on('add-keyregister', (e, register) => {
-    console.log(register)
     keyStorage.add(register)
     keyStorage.save()
     gui.updateRegisterList(keyStorage.getAll())

@@ -3,12 +3,14 @@ const EventEmitter = require('events')
 
 const menuEmitter = new EventEmitter()
 
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow, formWindow
 
-const createWindow = () => {
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.on('ready', () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
@@ -32,13 +34,7 @@ const createWindow = () => {
   let mainMenu = require('./menu.js').mainMenu
   let templateMenu = mainMenu(menuEmitter)
   Menu.setApplicationMenu(Menu.buildFromTemplate(templateMenu))
-  
-};
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
@@ -59,16 +55,26 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
-const { KeyStorageFileManager } = require('./modules/KeyStorageFileManager')
+
+function createFormModal(browserWindow, width, height, url) {
+  let winForm = new BrowserWindow({
+    width: width,
+    height: height,
+    frame: false,
+    parent: browserWindow,
+    modal: true
+  })
+  winForm.loadURL(url)
+}
 
 menuEmitter.on('create-keystorage', (e) => {
-  console.log('crear keystorage')
-  // data es un objeto del tipo {file: '/ruta/al/keystorage', key: 'laclave'}
-  KeyStorageFileManager.createKeyStorageFile(mainWindow)  
+  let url = `file://${__dirname}/templates/form_create_filestorage.html` 
+  createFormModal(mainWindow, 400, 350, url)
 })
 
 menuEmitter.on('load-keystorage', (e) => {
-  KeyStorageFileManager.loadKeyStorageFile(mainWindow) 
+  let url = `file://${__dirname}/templates/form_load_filestorage.html`
+  createFormModal(mainWindow, 400, 350, url) 
 })
 
 ipcMain.on('load-keystorage', (e, args) => {
@@ -76,12 +82,11 @@ ipcMain.on('load-keystorage', (e, args) => {
 })
 
 menuEmitter.on('add-keyregister', (e) => {
-  console.log('añadir keyregister')
-  KeyStorageFileManager.addKeyRegister(mainWindow)
+  let url = `file://${__dirname}/templates/form_add_keyregister.html`
+  createFormModal(mainWindow, 500, 550, url)
 })
 
 ipcMain.on('add-keyregister', (e, register) => {
-  console.log(register)
   mainWindow.webContents.send('add-keyregister', register)
 })
 
@@ -90,6 +95,5 @@ menuEmitter.on('edit-keyregister', (e) => {
 })
 
 menuEmitter.on('delete-keyregister', (e) => {
-  console.log('borrar keyregister')
   mainWindow.webContents.send('delete-keyregister')
 })
