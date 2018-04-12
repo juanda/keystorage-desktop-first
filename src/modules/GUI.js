@@ -100,6 +100,7 @@ class GUI {
     let i = 0;
     for (let key in registers) {
       let reg_element = this.document.createElement("li");
+      this.current_key = key
       reg_element.className = `list-group-item ${(i == 0) ? 'active' : ''}`;
       reg_element.id = key;
       reg_element.innerHTML = `<div class="media-body">
